@@ -29,9 +29,9 @@ app.post('/api/new-movie', ({ body }, res) => {
     });
   });
   
-  // Read all movies
-  app.get('/api/movies', (req, res) => {
-    const sql = `SELECT id, movie_name AS title FROM movies`;
+// Read all departments
+app.get('/api/departments', (req, res) => {
+    const sql = `SELECT id, name AS dept FROM departments`;
     
     db.query(sql, (err, rows) => {
       if (err) {
@@ -44,7 +44,39 @@ app.post('/api/new-movie', ({ body }, res) => {
       });
     });
   });
-  
+
+// Read all roles
+app.get('/api/role', (req, res) => {
+    const sql = `SELECT id, title, salary, department_id AS job FROM role`;
+    
+    db.query(sql, (err, rows) => {
+      if (err) {
+        res.status(500).json({ error: err.message });
+         return;
+      }
+      res.json({
+        message: 'success',
+        data: rows
+      });
+    });
+  });
+
+// Read all employees
+app.get('/api/employee', (req, res) => {
+    const sql = `SELECT id, first_name, last_name, role_id, manager_id AS team FROM employee`;
+    
+    db.query(sql, (err, rows) => {
+      if (err) {
+        res.status(500).json({ error: err.message });
+         return;
+      }
+      res.json({
+        message: 'success',
+        data: rows
+      });
+    });
+  });
+
   // Delete a movie
   app.delete('/api/movie/:id', (req, res) => {
     const sql = `DELETE FROM movies WHERE id = ?`;
