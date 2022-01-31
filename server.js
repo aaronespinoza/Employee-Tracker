@@ -97,6 +97,37 @@ function addDepartment() {
       });
 }
 
+function addRole() {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "roleTitle",
+        message: "What is the new role?",
+      },
+      {
+        type: "input",
+        name: "roleSalary",
+        message: "What is the salary of this role?",
+      },
+      {
+        type: "input",
+        name: "roleDepartmentId",
+        message: "What is this role's deparment ID?",
+      },
+    ])
+    .then((answer) => {
+      db.query(
+        "insert into role (title, salary, department_id) values (?, ?, ?)",
+        [answer.roleTitle, answer.roleSalary, answer.roleDepartmentId],
+        (err, data) => {
+          console.log("Your new role has been added!");
+          viewRoles();
+        }
+      );
+    });
+}
+
 // Read all roles
 app.get('/api/role', (req, res) => {
     const sql = `SELECT id, title, salary, department_id AS job FROM role`;
