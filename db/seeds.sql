@@ -15,3 +15,6 @@ VALUES("Charlotte","York"),
       ("Miranda","Hobbes"),
       ("Samantha","Jones"),
       ("Carrie","Bradshaw");
+
+UPDATE employee SET manager_id = 3
+WHERE id = 1 or id = 2 or id = 4;

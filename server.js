@@ -1,49 +1,67 @@
-const express = require('express')
 const mysql = require("mysql2")
+const inquirer = require("inquirer");
+require("console.table");
+require("dotenv").config()
+const db = mysql.createConnection({
+    host: "localhost",
+    port: 3306,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME
+});
 
-const PORT = process.env.PORT || 3001;
-const app = express();
-
-// Express middleware
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
-
-// Connect to database
-
-//MUST MODIFY
-// Create a movie
-app.post('/api/new-movie', ({ body }, res) => {
-    const sql = `INSERT INTO movies (movie_name)
-      VALUES (?)`;
-    const params = [body.movie_name];
-    
-    db.query(sql, params, (err, result) => {
-      if (err) {
-        res.status(400).json({ error: err.message });
-        return;
-      }
-      res.json({
-        message: 'success',
-        data: body
-      });
-    });
+function viewDeparment() {
+  db.query("select * from department", (err, data) => {
+      if (err) throw (err)
+      console.table(data);
+      startMenu();
   });
-  
-// Read all departments
-app.get('/api/departments', (req, res) => {
-    const sql = `SELECT id, name AS dept FROM departments`;
-    
-    db.query(sql, (err, rows) => {
-      if (err) {
-        res.status(500).json({ error: err.message });
-         return;
-      }
-      res.json({
-        message: 'success',
-        data: rows
-      });
-    });
+}
+
+function viewRoles() {
+  db.query("select * from role", (err, data) => {
+      if (err) throw (err)
+      console.table(data);
+      startMenu();
   });
+}
+
+function startMenu() {
+  inquirer
+      .prompt([{
+          type: "list",
+          name: "menu",
+          message: "What would you like to do?",
+          choices: [
+              "View all departments",
+              "View all roles",
+              "View all employees",
+              "Add a department",
+              "Add a role",
+              "Add an employee",
+              "Update an employee role",
+          ],
+      }, ])
+      .then((answers) => {
+          if (answers.menu === "View all departments") {
+              console.log("departments")
+              viewDeparment();
+          } else if (answers.menu === "View all roles") {
+              console.log("roles")
+              viewRoles();
+          } else if (answers.menu === "View all employees") {
+              viewEmployees();
+          } else if (answers.menu === "Add a department") {
+              addDepartment();
+          } else if (answers.menu === "Add a role") {
+              addRole();
+          } else if (answers.menu === "Add an employee") {
+              addEmployee();
+          } else {
+              updateEmployee();
+          }
+      });
+}
 
 // Read all roles
 app.get('/api/role', (req, res) => {
