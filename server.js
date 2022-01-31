@@ -63,6 +63,40 @@ function startMenu() {
       });
 }
 
+function viewRoles() {
+  db.query("select * from role", (err, data) => {
+      if (err) throw (err)
+      console.table(data);
+      startMenu();
+  });
+}
+
+function viewEmployees() {
+  db.query("select * from employee", (err, data) => {
+      if (err) throw (err)
+      console.table(data);
+      startMenu();
+  });
+}
+
+function addDepartment() {
+  inquirer
+      .prompt([{
+          type: "input",
+          name: "departmentName",
+          message: "Select new department?",
+      }, ])
+      .then((answer) => {
+          db.query(
+              "insert into department (name) values (?)", [answer.departmentName],
+              (err, data) => {
+                  console.log("You succesfully added a new department!");
+                  viewDeparment();
+              }
+          );
+      });
+}
+
 // Read all roles
 app.get('/api/role', (req, res) => {
     const sql = `SELECT id, title, salary, department_id AS job FROM role`;
