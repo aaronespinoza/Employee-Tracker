@@ -152,22 +152,6 @@ function updateEmployee() {
       });
 }
 
-// Read all roles
-app.get('/api/role', (req, res) => {
-    const sql = `SELECT id, title, salary, department_id AS job FROM role`;
-    
-    db.query(sql, (err, rows) => {
-      if (err) {
-        res.status(500).json({ error: err.message });
-         return;
-      }
-      res.json({
-        message: 'success',
-        data: rows
-      });
-    });
-  });
-
 // Read all employees
 app.get('/api/employee', (req, res) => {
     const sql = `SELECT id, first_name, last_name, role_id, manager_id AS team FROM employee`;
