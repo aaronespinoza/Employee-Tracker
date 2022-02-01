@@ -128,6 +128,30 @@ function addRole() {
     });
 }
 
+function updateEmployee() {
+  inquirer
+      .prompt([{
+              type: "input",
+              name: "employeeId",
+              message: "Which employee ID would you like to update?",
+          },
+          {
+              type: "input",
+              name: "roleId",
+              message: "What is the new role ID?",
+          },
+      ])
+      .then((answer) => {
+          db.query(
+              "update employee set role_id = ? where id = ?", [answer.roleId, answer.employeeId],
+              (err, data) => {
+                  console.log("Your new role has been updated!");
+                  viewEmployees();
+              }
+          );
+      });
+}
+
 // Read all roles
 app.get('/api/role', (req, res) => {
     const sql = `SELECT id, title, salary, department_id AS job FROM role`;
