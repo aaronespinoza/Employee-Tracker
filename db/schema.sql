@@ -23,15 +23,26 @@ CREATE TABLE role (
 );
 
 CREATE TABLE employee (
-  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  first_name VARCHAR(30),
-  last_name VARCHAR(30),
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  first_name VARCHAR(30) NOT NULL,
+  last_name VARCHAR(30) NOT NULL,
   role_id INT,
-  manager_id INT,
-  FOREIGN KEY (role_id)
-  REFERENCES role(id)
-  ON DELETE SET NULL
-  FOREIGN KEY (manager_id)
-  REFERENCES employee(id)
-  ON DELETE SET NULL
+  INDEX role_ind (role_id),
+ FOREIGN KEY (role_id) REFERENCES role(id) ON DELETE CASCADE,
+  manager_id INT UNSIGNED,
+  INDEX man_ind (manager_id),
+  FOREIGN KEY (manager_id) REFERENCES employee(id) ON DELETE SET NULL
 );
+-- CREATE TABLE employee (
+--   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+--   first_name VARCHAR(30),
+--   last_name VARCHAR(30),
+--   role_id INT,
+--   manager_id INT,
+--   FOREIGN KEY (role_id)
+--   REFERENCES role(id)
+--   ON DELETE SET NULL
+--   FOREIGN KEY (manager_id)
+--   REFERENCES employee(id)
+--   ON DELETE SET NULL
+-- );

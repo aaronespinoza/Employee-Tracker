@@ -62,6 +62,7 @@ function viewRoles() {
       console.table(data);
       startMenu();
   });
+
 }
 
 
