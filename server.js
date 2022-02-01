@@ -10,22 +10,6 @@ const db = mysql.createConnection({
     database: process.env.DB_NAME
 });
 
-function viewDeparment() {
-  db.query("select * from department", (err, data) => {
-      if (err) throw (err)
-      console.table(data);
-      startMenu();
-  });
-}
-
-function viewRoles() {
-  db.query("select * from role", (err, data) => {
-      if (err) throw (err)
-      console.table(data);
-      startMenu();
-  });
-}
-
 function startMenu() {
   inquirer
       .prompt([{
@@ -63,6 +47,15 @@ function startMenu() {
       });
 }
 
+
+function viewDeparment() {
+  db.query("select * from department", (err, data) => {
+      if (err) throw (err)
+      console.table(data);
+      startMenu();
+  });
+}
+
 function viewRoles() {
   db.query("select * from role", (err, data) => {
       if (err) throw (err)
@@ -70,6 +63,7 @@ function viewRoles() {
       startMenu();
   });
 }
+
 
 function viewEmployees() {
   db.query("select * from employee", (err, data) => {
@@ -128,6 +122,39 @@ function addRole() {
     });
 }
 
+function addEmployee() {
+  inquirer
+      .prompt([{
+              type: "input",
+              name: "employeeFirstName",
+              message: "What is the new employee's first name?",
+          },
+          {
+              type: "input",
+              name: "employeeLastName",
+              message: "What is the new employee's last name",
+          },
+          {
+              type: "input",
+              name: "employeeRoleId",
+              message: "What is the new employee's role ID?",
+          }
+      ])
+      .then((answer) => {
+          db.query(
+              "insert into employee (first_name, last_name, role_id) values (?, ?, ?)", [
+                  answer.employeeFirstName,
+                  answer.employeeLastName,
+                  answer.employeeRoleId,
+              ],
+              (err, data) => {
+                  console.log("Your new Employee has been added!");
+                  viewEmployees();
+              }
+          );
+      });
+}
+
 function updateEmployee() {
   inquirer
       .prompt([{
@@ -152,12 +179,7 @@ function updateEmployee() {
       });
 }
 
-  // Default response for any other request (Not Found)
-  app.use((req, res) => {
-    res.status(404).end();
-  });
-  
-  app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-  });
-  
+db.connect((err) => {
+  if (err) throw err;
+  startMenu();
+});
